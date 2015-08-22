@@ -307,7 +307,6 @@
       "Type": "AWS::IAM::User"
     },
     "PostgresECSService": {
-      "DependsOn": "CustomTopic",
       "Properties": {
         "Cluster": {
           "Ref": "Cluster"
@@ -344,10 +343,7 @@
       "Version": "1.0"
     },
     "PostgresECSTaskDefinition": {
-      "DependsOn": [
-        "CustomTopic",
-        "ServiceRole"
-      ],
+      "DependsOn": "ServiceRole",
       "Properties": {
         "Environment": {
           "Ref": "Environment"
@@ -480,7 +476,6 @@
       "Type": "AWS::S3::Bucket"
     },
     "WebECSService": {
-      "DependsOn": "CustomTopic",
       "Properties": {
         "Cluster": {
           "Ref": "Cluster"
@@ -530,10 +525,7 @@
       "Version": "1.0"
     },
     "WebECSTaskDefinition": {
-      "DependsOn": [
-        "CustomTopic",
-        "ServiceRole"
-      ],
+      "DependsOn": "ServiceRole",
       "Properties": {
         "Environment": {
           "Ref": "Environment"

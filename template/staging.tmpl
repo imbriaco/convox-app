@@ -166,7 +166,7 @@
   {{ if .HasProcesses }}
     {{ range $k, $e := . }}
       "{{ upper $k }}ECSTaskDefinition": {
-        "DependsOn": ["CustomTopic", "ServiceRole"],
+        "DependsOn": "ServiceRole",
         "Type": "Custom::ECSTaskDefinition",
         "Version": "1.0",
         "Properties": {
@@ -180,7 +180,6 @@
         }
       },
       "{{ upper $k }}ECSService": {
-        "DependsOn": "CustomTopic",
         "Type": "Custom::ECSService",
         "Version": "1.0",
         "Properties": {
