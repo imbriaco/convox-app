@@ -160,8 +160,7 @@
     "Type": "AWS::Kinesis::Stream",
     "Properties": {
       "ShardCount": 1
-    },
-    "DependsOn": ["ServiceRole"]
+    }
   },
   {{ if .HasProcesses }}
     "LogsUser": {
@@ -271,8 +270,7 @@
       "GroupDescription": { "Fn::Join": [ " ", [ { "Ref": "AWS::StackName" }, "-balancer" ] ] },
       "SecurityGroupIngress": [ {{ ingress . }} ],
       "VpcId": { "Ref": "VPC" }
-    },
-    "DependsOn": ["ServiceRole"]
+    }
   },
   "Balancer": {
     "Type": "AWS::ElasticLoadBalancing::LoadBalancer",
