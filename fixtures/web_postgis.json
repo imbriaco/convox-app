@@ -218,9 +218,6 @@
       "Type": "AWS::ElasticLoadBalancing::LoadBalancer"
     },
     "BalancerSecurityGroup": {
-      "DependsOn": [
-        "ServiceRole"
-      ],
       "Properties": {
         "GroupDescription": {
           "Fn::Join": [
@@ -329,9 +326,6 @@
       "Type": "AWS::IAM::Role"
     },
     "Kinesis": {
-      "DependsOn": [
-        "ServiceRole"
-      ],
       "Properties": {
         "ShardCount": 1
       },
