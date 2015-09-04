@@ -232,6 +232,7 @@
 {{ define "balancer-params" }}
   {{ range $ps, $entry := . }}
     {{ range $i, $port := $entry.Ports }}
+      {{ if (contains $port ":") }}
       {{ $parts := (split $port ":") }}
       "{{ upper $ps }}Port{{ index $parts 0 }}Container": {
         "Type": "String",
@@ -248,12 +249,19 @@
         "Default" : "{{ index $entry.Randoms $i }}",
         "Description" : "Container host mapped port"
       },
+      {{ else }}
+      "{{ upper $ps }}Port{{ $port }}Container": {
+        "Type": "String",
+        "Default": "{{ $port }}",
+        "Description": "Exposed port from within container"
+      },
+      {{ end }}
     {{ end }}
   {{ end }}
 {{ end }}
 
 {{ define "balancer-outputs" }}
-  {{ if .HasPorts }}
+  {{ if .HasExternalPorts }}
     "BalancerHost": {
       "Value": { "Fn::GetAtt": [ "Balancer", "DNSName" ] }
     },
@@ -271,7 +279,7 @@
 {{ end }}
 
 {{ define "balancer-resources" }}
-  {{ if .HasPorts }}
+  {{ if .HasExternalPorts }}
     "BalancerSecurityGroup": {
       "Type": "AWS::EC2::SecurityGroup",
       "Properties": {

@@ -239,13 +239,15 @@ func templateHelpers() template.FuncMap {
 			mappings := []string{}
 
 			for _, port := range entry.Ports {
-				parts := strings.SplitN(port, ":", 2)
+				parts := strings.Split(port, ":")
 
-				if len(parts) != 2 {
-					continue
+				fmt.Println("len: ", len(parts))
+
+				if len(parts) == 1 {
+					mappings = append(mappings, fmt.Sprintf(`{ "Fn::Join": [ ":", [ 0, { "Ref": "%sPort%sContainer" } ] ] }`, upperName(ps), parts[0]))
+				} else {
+					mappings = append(mappings, fmt.Sprintf(`{ "Fn::Join": [ ":", [ { "Ref": "%sPort%sHost" }, "%s" ] ] }`, upperName(ps), parts[0], parts[1]))
 				}
-
-				mappings = append(mappings, fmt.Sprintf(`{ "Fn::Join": [ ":", [ { "Ref": "%sPort%sHost" }, "%s" ] ] }`, upperName(ps), parts[0], parts[1]))
 			}
 
 			envs := make([]string, 0)
@@ -375,6 +377,9 @@ func templateHelpers() template.FuncMap {
 
 			return template.HTML(strings.Join(names, ","))
 		},
+		"contains": func(s string, ss string) bool {
+			return strings.Contains(s, ss)
+		},
 		"safe": func(s string) template.HTML {
 			return template.HTML(s)
 		},
@@ -483,6 +488,20 @@ func (m Manifest) FirstRandom() string {
 	return "80"
 }
 
+func (m Manifest) HasExternalPorts() bool {
+	if len(m) == 0 {
+		return true // special case to pre-initialize ELB at app create
+	}
+
+	for _, me := range m {
+		if me.HasExternalPorts() {
+			return true
+		}
+	}
+
+	return false
+}
+
 func (m Manifest) HasPorts() bool {
 	if len(m) == 0 {
 		return true // special case to pre-initialize ELB at app create
@@ -503,4 +522,14 @@ func (m Manifest) HasProcesses() bool {
 
 func (me ManifestEntry) HasPorts() bool {
 	return len(me.Ports) > 0
+}
+
+func (me ManifestEntry) HasExternalPorts() bool {
+	for _, port := range me.Ports {
+		if strings.Contains(port, ":") {
+			return true
+		}
+	}
+
+	return false
 }
