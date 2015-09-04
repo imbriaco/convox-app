@@ -233,15 +233,20 @@
   {{ range $ps, $entry := . }}
     {{ range $i, $port := $entry.Ports }}
       {{ $parts := (split $port ":") }}
+      "{{ upper $ps }}Port{{ index $parts 0 }}Container": {
+        "Type": "String",
+        "Default": "{{ index $parts 1 }}",
+        "Description": "Exposed port from within container"
+      },
       "{{ upper $ps }}Port{{ index $parts 0 }}Balancer": {
         "Type" : "String",
         "Default" : "{{ index $parts 0 }}",
-        "Description" : ""
+        "Description" : "Externally bound port number"
       },
       "{{ upper $ps }}Port{{ index $parts 0 }}Host": {
         "Type" : "String",
         "Default" : "{{ index $entry.Randoms $i }}",
-        "Description" : ""
+        "Description" : "Container host mapped port"
       },
     {{ end }}
   {{ end }}

@@ -1,3 +1,4 @@
+len:  2
 {
   "AWSTemplateFormatVersion": "2010-09-09",
   "Conditions": {
@@ -144,12 +145,17 @@
     },
     "WebPort5000Balancer": {
       "Default": "5000",
-      "Description": "",
+      "Description": "Externally bound port number",
+      "Type": "String"
+    },
+    "WebPort5000Container": {
+      "Default": "3000",
+      "Description": "Exposed port from within container",
       "Type": "String"
     },
     "WebPort5000Host": {
       "Default": "12345",
-      "Description": "",
+      "Description": "Container host mapped port",
       "Type": "String"
     },
     "WebService": {
