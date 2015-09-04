@@ -41,8 +41,8 @@ func testTemplateOutput(name string, t *testing.T) {
 	_assert(t, cases)
 }
 
-func TestStagingWebInternalOnly(t *testing.T) {
-	testTemplateOutput("web_internal_only", t)
+func TestStagingWebPostgisInternal(t *testing.T) {
+	testTemplateOutput("web_postgis_internal", t)
 }
 
 func TestStagingWebPostgis(t *testing.T) {
