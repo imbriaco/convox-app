@@ -241,8 +241,6 @@ func templateHelpers() template.FuncMap {
 			for _, port := range entry.Ports {
 				parts := strings.Split(port, ":")
 
-				fmt.Println("len: ", len(parts))
-
 				if len(parts) == 1 {
 					mappings = append(mappings, fmt.Sprintf(`{ "Fn::Join": [ ":", [ 0, { "Ref": "%sPort%sContainer" } ] ] }`, upperName(ps), parts[0]))
 				} else {
